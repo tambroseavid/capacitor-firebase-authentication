@@ -3,12 +3,7 @@ package dev.robingenz.capacitorjs.plugins.firebase.auth;
 import com.getcapacitor.JSObject;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.OAuthCredential;
-import com.google.firebase.auth.PhoneAuthCredential;
-import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.GoogleAuthProviderHandler;
-import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.OAuthProviderHandler;
 
 public class FirebaseAuthenticationHelper {
 
@@ -63,6 +58,12 @@ public class FirebaseAuthenticationHelper {
         if (idToken != null) {
             result.put("idToken", idToken);
         }
+        return result;
+    }
+
+    public static JSObject createSendPasswordResetEmailResult() {
+        JSObject result = new JSObject();
+        result.put("success", true);
         return result;
     }
 }

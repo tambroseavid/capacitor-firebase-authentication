@@ -2,9 +2,7 @@ package dev.robingenz.capacitorjs.plugins.firebase.auth;
 
 import android.content.Intent;
 import android.util.Log;
-import androidx.activity.result.ActivityResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,13 +13,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+
+import java.util.Arrays;
+import java.util.List;
+
+import androidx.activity.result.ActivityResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.FacebookAuthProviderHandler;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.GoogleAuthProviderHandler;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.OAuthProviderHandler;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.PhoneAuthProviderHandler;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.PlayGamesAuthProviderHandler;
-import java.util.Arrays;
-import java.util.List;
 
 public class FirebaseAuthentication {
 
@@ -32,6 +35,7 @@ public class FirebaseAuthentication {
     @Nullable
     private AuthStateChangeListener authStateChangeListener;
 
+    public static final String ERROR_SEND_PASSWORD_RESET_FAILED = "send password reset failed.";
     public static final String ERROR_SIGN_IN_FAILED = "signIn failed.";
     public static final String ERROR_CUSTOM_TOKEN_SKIP_NATIVE_AUTH =
         "signInWithCustomToken cannot be used in combination with skipNativeAuth.";
@@ -90,6 +94,35 @@ public class FirebaseAuthentication {
         );
     }
 
+    public void sendPasswordResetEmail(PluginCall call) {
+        String email = call.getString("email", "");
+
+        firebaseAuthInstance.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(FirebaseAuthenticationPlugin.TAG, "sendPasswordResetEmail succeeded.");
+                            JSObject signInResult = FirebaseAuthenticationHelper.createSendPasswordResetEmailResult();
+                            call.resolve(signInResult);
+                        } else  {
+                            Log.e(FirebaseAuthenticationPlugin.TAG, "sendPasswordResetEmail failed.", task.getException());
+                            call.reject(ERROR_SEND_PASSWORD_RESET_FAILED);
+                        }
+                    }
+                })
+                .addOnFailureListener(
+                    plugin.getActivity(),
+                    new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.e(FirebaseAuthenticationPlugin.TAG, "sendPasswordResetEmail failed.", exception);
+                            call.reject(ERROR_SEND_PASSWORD_RESET_FAILED);
+                        }
+                    }
+                );;
+    }
+
     public void setLanguageCode(String languageCode) {
         firebaseAuthInstance.setLanguageCode(languageCode);
     }
@@ -112,6 +145,47 @@ public class FirebaseAuthentication {
 
     public void signInWithMicrosoft(PluginCall call) {
         oAuthProviderHandler.signIn(call, "microsoft.com");
+    }
+
+    public void signInWithPassword(PluginCall call) {
+        boolean skipNativeAuth = this.config.getSkipNativeAuth();
+        if (skipNativeAuth) {
+            call.reject(ERROR_CUSTOM_TOKEN_SKIP_NATIVE_AUTH);
+            return;
+        }
+
+        String email = call.getString("email", "");
+        String password = call.getString("password", "");
+
+        firebaseAuthInstance
+            .signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(
+                plugin.getActivity(),
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(FirebaseAuthenticationPlugin.TAG, "signInWithEmailAndPassword succeeded.");
+                            FirebaseUser user = getCurrentUser();
+                            JSObject signInResult = FirebaseAuthenticationHelper.createSignInResult(user, null, null);
+                            call.resolve(signInResult);
+                        } else {
+                            Log.e(FirebaseAuthenticationPlugin.TAG, "signInWithEmailAndPassword failed.", task.getException());
+                            call.reject(ERROR_SIGN_IN_FAILED);
+                        }
+                    }
+                }
+            )
+            .addOnFailureListener(
+                plugin.getActivity(),
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e(FirebaseAuthenticationPlugin.TAG, "signInWithEmailAndPassword failed.", exception);
+                        call.reject(ERROR_SIGN_IN_FAILED);
+                    }
+                }
+            );
     }
 
     public void signInWithPhoneNumber(PluginCall call) {

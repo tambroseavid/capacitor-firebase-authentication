@@ -25,7 +25,7 @@ declare module '@capacitor/cli' {
        *
        * Only available for Android and iOS.
        *
-       * @default ["apple.com", "facebook.com", "github.com", "google.com", "microsoft.com", "playgames.google.com", "twitter.com", "yahoo.com", "phone"]
+       * @default ["apple.com", "facebook.com", "github.com", "google.com", "microsoft.com", "playgames.google.com", "twitter.com", "yahoo.com", "phone", "password"]
        * @example ["apple.com", "google.com"]
        */
       providers?: string[];
@@ -42,6 +42,10 @@ export interface FirebaseAuthenticationPlugin {
    * Fetches the Firebase Auth ID Token for the currently signed-in user.
    */
   getIdToken(options?: GetIdTokenOptions): Promise<GetIdTokenResult>;
+  /**
+   * Sends a password reset email.
+   */
+  sendPasswordResetEmail(options?: SendPasswordResetEmailOptions): Promise<SendPasswordResetEmailResult>;
   /**
    * Sets the user-facing language code for auth operations.
    */
@@ -78,6 +82,10 @@ export interface FirebaseAuthenticationPlugin {
    * Starts the Yahoo sign-in flow.
    */
   signInWithYahoo(options?: SignInOptions): Promise<SignInResult>;
+  /**
+   * Starts the password sign-in flow.
+   */
+  signInWithPassword(options?: SignInWithPasswordOptions): Promise<SignInResult>;
   /**
    * Starts the sign-in flow using a phone number.
    *
@@ -166,6 +174,24 @@ export interface SignInCustomParameter {
   value: string;
 }
 
+export interface SignInWithPasswordOptions {
+  /**
+   * The email address to be verified.
+   */
+  email: string;
+  /**
+   * The password to be verified.
+   */
+  password: string;
+}
+
+export interface SendPasswordResetEmailOptions {
+  /**
+   * The email address to send the reset message.
+   */
+  email: string;
+}
+
 export interface SignInWithPhoneNumberOptions {
   /**
    * The phone number to be verified.
@@ -207,6 +233,14 @@ export interface SignInWithPhoneNumberResult extends SignInResult {
    */
   verificationId?: string;
 }
+
+export interface SendPasswordResetEmailResult {
+  /**
+   * Confirm the request status.
+   */
+  success: boolean;
+}
+
 
 export interface User {
   displayName: string | null;

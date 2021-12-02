@@ -41,6 +41,10 @@ public class FirebaseAuthenticationPlugin: CAPPlugin {
             call.resolve(result)
         })
     }
+  
+    @objc func sendPasswordResetEmail(_ call: CAPPluginCall) {
+        implementation?.sendPasswordResetEmail(call)
+    }
 
     @objc func setLanguageCode(_ call: CAPPluginCall) {
         let languageCode = call.getString("languageCode", "")
@@ -52,7 +56,7 @@ public class FirebaseAuthenticationPlugin: CAPPlugin {
     @objc func signInWithApple(_ call: CAPPluginCall) {
         implementation?.signInWithApple(call)
     }
-
+  
     @objc func signInWithFacebook(_ call: CAPPluginCall) {
         implementation?.signInWithFacebook(call)
     }
@@ -69,6 +73,10 @@ public class FirebaseAuthenticationPlugin: CAPPlugin {
         implementation?.signInWithMicrosoft(call)
     }
 
+    @objc func signInWithPassword(_ call: CAPPluginCall) {
+        implementation?.signInWithPassword(call)
+    }
+
     @objc func signInWithPhoneNumber(_ call: CAPPluginCall) {
         let phoneNumber = call.getString("phoneNumber")
         let verificationId = call.getString("verificationId")
@@ -81,6 +89,8 @@ public class FirebaseAuthenticationPlugin: CAPPlugin {
 
         implementation?.signInWithPhoneNumber(call)
     }
+  
+  
 
     @objc func signInWithPlayGames(_ call: CAPPluginCall) {
         call.reject("Not available on iOS.")

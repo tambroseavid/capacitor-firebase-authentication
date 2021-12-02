@@ -60,4 +60,10 @@ public class FirebaseAuthenticationHelper {
         }
         return result
     }
+  
+    public static func createPasswordResetResult() -> JSObject {
+        var result = JSObject()
+        result["success"] = true
+        return result
+    }
 }

@@ -64,10 +64,10 @@ These SDKs can initialize on their own and collect various data.
 
 These configuration values are available:
 
-| Prop                 | Type                  | Description                                                                                                                                                                                                                                                                                            | Default                                                                                                                                              |
-| -------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`skipNativeAuth`** | <code>boolean</code>  | Configure whether the plugin should skip the native authentication. Only needed if you want to use the Firebase JavaScript SDK. Only available for Android and iOS.                                                                                                                                    | <code>false</code>                                                                                                                                   |
-| **`providers`**      | <code>string[]</code> | Configure which providers you want to use so that only the providers you need are fully initialized. If you do not configure any providers, they will be all initialized. Please note that this does not prevent the automatic initialization of third-party SDKs. Only available for Android and iOS. | <code>["apple.com", "facebook.com", "github.com", "google.com", "microsoft.com", "playgames.google.com", "twitter.com", "yahoo.com", "phone"]</code> |
+| Prop                 | Type                  | Description                                                                                                                                                                                                                                                                                            | Default                                                                                                                                                          |
+| -------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`skipNativeAuth`** | <code>boolean</code>  | Configure whether the plugin should skip the native authentication. Only needed if you want to use the Firebase JavaScript SDK. Only available for Android and iOS.                                                                                                                                    | <code>false</code>                                                                                                                                               |
+| **`providers`**      | <code>string[]</code> | Configure which providers you want to use so that only the providers you need are fully initialized. If you do not configure any providers, they will be all initialized. Please note that this does not prevent the automatic initialization of third-party SDKs. Only available for Android and iOS. | <code>["apple.com", "facebook.com", "github.com", "google.com", "microsoft.com", "playgames.google.com", "twitter.com", "yahoo.com", "phone", "password"]</code> |
 
 ### Examples
 
@@ -186,6 +186,7 @@ const useAppLanguage = async () => {
 
 * [`getCurrentUser()`](#getcurrentuser)
 * [`getIdToken(...)`](#getidtoken)
+* [`sendPasswordResetEmail(...)`](#sendpasswordresetemail)
 * [`setLanguageCode(...)`](#setlanguagecode)
 * [`signInWithApple(...)`](#signinwithapple)
 * [`signInWithFacebook(...)`](#signinwithfacebook)
@@ -195,6 +196,7 @@ const useAppLanguage = async () => {
 * [`signInWithPlayGames(...)`](#signinwithplaygames)
 * [`signInWithTwitter(...)`](#signinwithtwitter)
 * [`signInWithYahoo(...)`](#signinwithyahoo)
+* [`signInWithPassword(...)`](#signinwithpassword)
 * [`signInWithPhoneNumber(...)`](#signinwithphonenumber)
 * [`signInWithCustomToken(...)`](#signinwithcustomtoken)
 * [`signOut()`](#signout)
@@ -235,6 +237,23 @@ Fetches the Firebase Auth ID Token for the currently signed-in user.
 | **`options`** | <code><a href="#getidtokenoptions">GetIdTokenOptions</a></code> |
 
 **Returns:** <code>Promise&lt;<a href="#getidtokenresult">GetIdTokenResult</a>&gt;</code>
+
+--------------------
+
+
+### sendPasswordResetEmail(...)
+
+```typescript
+sendPasswordResetEmail(options?: SendPasswordResetEmailOptions | undefined) => Promise<SendPasswordResetEmailResult>
+```
+
+Sends a password reset email.
+
+| Param         | Type                                                                                    |
+| ------------- | --------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#sendpasswordresetemailoptions">SendPasswordResetEmailOptions</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#sendpasswordresetemailresult">SendPasswordResetEmailResult</a>&gt;</code>
 
 --------------------
 
@@ -390,6 +409,23 @@ Starts the Yahoo sign-in flow.
 --------------------
 
 
+### signInWithPassword(...)
+
+```typescript
+signInWithPassword(options?: SignInWithPasswordOptions | undefined) => Promise<SignInResult>
+```
+
+Starts the password sign-in flow.
+
+| Param         | Type                                                                            |
+| ------------- | ------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#signinwithpasswordoptions">SignInWithPasswordOptions</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#signinresult">SignInResult</a>&gt;</code>
+
+--------------------
+
+
 ### signInWithPhoneNumber(...)
 
 ```typescript
@@ -521,6 +557,20 @@ Remove all listeners for this plugin.
 | **`forceRefresh`** | <code>boolean</code> | Force refresh regardless of token expiration. |
 
 
+#### SendPasswordResetEmailResult
+
+| Prop          | Type                 | Description                 |
+| ------------- | -------------------- | --------------------------- |
+| **`success`** | <code>boolean</code> | Confirm the request status. |
+
+
+#### SendPasswordResetEmailOptions
+
+| Prop        | Type                | Description                                  |
+| ----------- | ------------------- | -------------------------------------------- |
+| **`email`** | <code>string</code> | The email address to send the reset message. |
+
+
 #### SetLanguageCodeOptions
 
 | Prop               | Type                | Description                             |
@@ -560,6 +610,14 @@ Remove all listeners for this plugin.
 | ----------- | ------------------- | ------------------------------------------------------------------ |
 | **`key`**   | <code>string</code> | The custom parameter key (e.g. `login_hint`).                      |
 | **`value`** | <code>string</code> | The custom parameter value (e.g. `user@firstadd.onmicrosoft.com`). |
+
+
+#### SignInWithPasswordOptions
+
+| Prop           | Type                | Description                       |
+| -------------- | ------------------- | --------------------------------- |
+| **`email`**    | <code>string</code> | The email address to be verified. |
+| **`password`** | <code>string</code> | The password to be verified.      |
 
 
 #### SignInWithPhoneNumberResult

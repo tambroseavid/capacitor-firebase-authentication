@@ -8,5 +8,6 @@ public struct FirebaseAuthenticationConfig {
                      "playgames.google.com",
                      "twitter.com",
                      "yahoo.com",
+                     "password",
                      "phone"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@robingenz/capacitor-firebase-authentication",
+  "name": "@tambroseavid/capacitor-firebase-authentication",
   "version": "0.3.12",
   "description": "Capacitor plugin for Firebase Authentication.",
   "main": "dist/plugin.cjs.js",
@@ -11,16 +11,16 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "RobingenzCapacitorFirebaseAuthentication.podspec"
+    "TambroseavidCapacitorFirebaseAuthentication.podspec"
   ],
   "author": "Robin Genz <mail@robingenz.dev>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robingenz/capacitor-firebase-authentication.git"
+    "url": "git+https://github.com/tambroseavid/capacitor-firebase-authentication.git.git"
   },
   "bugs": {
-    "url": "https://github.com/robingenz/capacitor-firebase-authentication/issues"
+    "url": "https://github.com/tambroseavid/capacitor-firebase-authentication.git/issues"
   },
   "keywords": [
     "capacitor",
@@ -42,7 +42,8 @@
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "release": "standard-version"
+    "release": "standard-version",
+    "rimraf": "./node_modules/rimraf/bin.js"
   },
   "devDependencies": {
     "@capacitor/android": "3.2.0",

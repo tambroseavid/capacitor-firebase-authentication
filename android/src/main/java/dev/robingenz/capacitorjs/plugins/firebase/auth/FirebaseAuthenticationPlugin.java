@@ -1,7 +1,7 @@
 package dev.robingenz.capacitorjs.plugins.firebase.auth;
 
 import android.content.Intent;
-import androidx.activity.result.ActivityResult;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -9,6 +9,8 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.google.firebase.auth.FirebaseUser;
+
+import androidx.activity.result.ActivityResult;
 import dev.robingenz.capacitorjs.plugins.firebase.auth.handlers.FacebookAuthProviderHandler;
 
 @CapacitorPlugin(name = "FirebaseAuthentication", requestCodes = { FacebookAuthProviderHandler.RC_FACEBOOK_AUTH })
@@ -58,6 +60,11 @@ public class FirebaseAuthenticationPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void sendPasswordResetEmail(PluginCall call) {
+        implementation.sendPasswordResetEmail(call);
+    }
+
+    @PluginMethod
     public void setLanguageCode(PluginCall call) {
         String languageCode = call.getString("languageCode", "");
 
@@ -88,6 +95,11 @@ public class FirebaseAuthenticationPlugin extends Plugin {
     @PluginMethod
     public void signInWithMicrosoft(PluginCall call) {
         implementation.signInWithMicrosoft(call);
+    }
+
+    @PluginMethod
+    public void signInWithPassword(PluginCall call) {
+        implementation.signInWithPassword(call);
     }
 
     @PluginMethod

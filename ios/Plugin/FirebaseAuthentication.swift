@@ -74,6 +74,41 @@ public typealias AuthStateChangedObserver = () -> Void
         self.savedCall = call
         self.oAuthProviderHandler?.signIn(call: call, providerId: "microsoft.com")
     }
+  
+    @objc func signInWithPassword(_ call: CAPPluginCall) {
+        self.savedCall = call
+        let email = call.getString("email", "")
+        let password = call.getString("password", "")
+        Auth.auth().signIn(withEmail: email, password: password) { _, error in
+            if let error = error {
+                self.handleFailedSignIn(message: nil, error: error)
+                return
+            }
+            guard let savedCall = self.savedCall else {
+                return
+            }
+            let user = self.getCurrentUser()
+            let result = FirebaseAuthenticationHelper.createSignInResult(credential: nil, user: user, idToken: nil, nonce: nil)
+            savedCall.resolve(result)
+        }
+    }
+  
+    @objc func sendPasswordResetEmail(_ call: CAPPluginCall) {
+        self.savedCall = call
+        let email = call.getString("email", "")
+        Auth.auth().sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                self.handleFailedPasswordResetEmail(message: nil, error: error)
+                return
+            }
+            guard let savedCall = self.savedCall else {
+                return
+            }
+            let user = self.getCurrentUser()
+            let result = FirebaseAuthenticationHelper.createPasswordResetResult()
+            savedCall.resolve(result)
+      }
+    }
 
     @objc func signInWithPhoneNumber(_ call: CAPPluginCall) {
         self.savedCall = call
@@ -152,6 +187,14 @@ public typealias AuthStateChangedObserver = () -> Void
     }
 
     func handleFailedSignIn(message: String?, error: Error?) {
+        guard let savedCall = self.savedCall else {
+            return
+        }
+        let errorMessage = message ?? error?.localizedDescription ?? ""
+        savedCall.reject(errorMessage, nil, error)
+    }
+  
+    func handleFailedPasswordResetEmail(message: String?, error: Error?) {
         guard let savedCall = self.savedCall else {
             return
         }

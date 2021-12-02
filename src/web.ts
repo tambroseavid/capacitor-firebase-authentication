@@ -9,8 +9,10 @@ import {
   GoogleAuthProvider,
   OAuthCredential,
   OAuthProvider,
+  sendPasswordResetEmail,
   signInWithPopup,
   signInWithCustomToken,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 
 import type {
@@ -19,8 +21,11 @@ import type {
   FirebaseAuthenticationPlugin,
   GetCurrentUserResult,
   GetIdTokenResult,
+  SendPasswordResetEmailOptions,
+  SendPasswordResetEmailResult,
   SetLanguageCodeOptions,
   SignInResult,
+  SignInWithPasswordOptions,
   SignInWithPhoneNumberOptions,
   SignInWithCustomTokenOptions,
   User,
@@ -51,6 +56,14 @@ export class FirebaseAuthenticationWeb
       token: idToken || '',
     };
     return result;
+  }
+
+  public async sendPasswordResetEmail(
+    options: SendPasswordResetEmailOptions
+  ): Promise<SendPasswordResetEmailResult> {
+    const auth = getAuth();
+    await sendPasswordResetEmail(auth, options.email);
+    return this.createPasswordResetResult();
   }
 
   public async setLanguageCode(options: SetLanguageCodeOptions): Promise<void> {
@@ -116,6 +129,14 @@ export class FirebaseAuthenticationWeb
     const result = await signInWithPopup(auth, provider);
     const credential = OAuthProvider.credentialFromResult(result);
     return this.createSignInResult(result.user, credential);
+  }
+
+  public async signInWithPassword(
+    options: SignInWithPasswordOptions
+  ): Promise<SignInResult> {
+    const auth = getAuth();
+    const result = await signInWithEmailAndPassword(auth, options.email, options.password);
+    return this.createSignInResult(result.user, null);
   }
 
   public async signInWithPhoneNumber(
@@ -195,6 +216,13 @@ export class FirebaseAuthenticationWeb
       result.idToken = credential.idToken;
       result.secret = credential.secret;
     }
+    return result;
+  }
+
+  private createPasswordResetResult(): SendPasswordResetEmailResult {
+    const result: SendPasswordResetEmailResult = {
+      success: true,
+    };
     return result;
   }
 }
