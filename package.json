@@ -1,6 +1,6 @@
 {
   "name": "@tambroseavid/capacitor-firebase-authentication",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "Capacitor plugin for Firebase Authentication.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -13,7 +13,7 @@
     "ios/Plugin/",
     "TambroseavidCapacitorFirebaseAuthentication.podspec"
   ],
-  "author": "Robin Genz <mail@robingenz.dev>",
+  "author": "Toby Ambrose <toby.ambrose@avidratings.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
